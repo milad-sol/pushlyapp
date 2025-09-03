@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" x-data="themeSwitcher()" :class="{ 'dark': isDarkMode }" x-init="init()">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pushly — تولید هوشمند محتوای محصولات ووکامرس و وردپرس</title>
+  <meta name="description" content="پوشلی: تولید خودکار و هوشمند محتوای محصولات ووکامرس و وردپرس با هوش مصنوعی، انتشار مستقیم، مدیریت تصاویر و گزارش‌گیری کامل." />
+  <meta name="theme-color" content="#111827" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Vazirmatn', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#f5f7ff', 100: '#e9edff', 200: '#cfd7ff', 300: '#a6b5ff', 400: '#6f86ff',
+              500: '#4c66ff', 600: '#2f49f5', 700: '#2037d1', 800: '#1c2ea6', 900: '#192b85'
+            }
+          },
+          boxShadow: {
+            glow: '0 0 0 2px rgba(76,102,255,0.25), 0 10px 25px rgba(17,24,39,0.25)',
+            'glow-dark': '0 0 0 2px rgba(76,102,255,0.25), 0 10px 25px rgba(0,0,0,0.4)'
+          },
+          backgroundImage: {
+            'mesh-dark': 'radial-gradient(1000px 400px at 10% -10%, rgba(76,102,255,.15), transparent 60%), radial-gradient(800px 300px at 100% 0%, rgba(59,130,246,.12), transparent 60%), radial-gradient(600px 300px at 50% 120%, rgba(16,185,129,.12), transparent 60%)',
+            'mesh-light': 'radial-gradient(1000px 400px at 10% -10%, rgba(76,102,255,.12), transparent 60%), radial-gradient(800px 300px at 100% 0%, rgba(59,130,246,.10), transparent 60%), radial-gradient(600px 300px at 50% 120%, rgba(16,185,129,.10), transparent 60%)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { scroll-behavior: smooth; }
+    body { font-family: 'Vazirmatn', system-ui, sans-serif; }
+    [x-cloak] { display: none !important; }
+    .glass {
+      backdrop-filter: saturate(160%) blur(10px);
+      background: rgba(255,255,255,.8);
+      border: 1px solid rgba(255,255,255,.2);
+    }
+    .glass-dark {
+      backdrop-filter: saturate(160%) blur(10px);
+      background: rgba(31,41,55,.7);
+      border: 1px solid rgba(75,85,99,.3);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+
+  <script src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+
+  <!-- Decorative gradient background -->
+  <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 bg-mesh-light dark:bg-mesh-dark"></div>
+
+  <!-- Header / Navbar -->
+  <header x-data="{ open:false }" class="sticky top-0 z-50 border-b border-gray-200/60 dark:border-gray-800/60">
+    <nav class="container mx-auto px-5 sm:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2 text-2xl font-extrabold text-gray-900 dark:text-white">
+          <span class="inline-flex w-9 h-9 items-center justify-center rounded-xl bg-brand-600 text-white shadow-glow">🚀</span>
+          <span>Pushly</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6 text-sm">
+          <a href="#features" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ویژگی‌ها</a>
+          <a href="#how" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">چطور کار می‌کند؟</a>
+          <a href="#demo" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">دمو</a>
+          <a href="#audience" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">مخاطبان</a>
+          <a href="#faq" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">سوالات</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <a href="#download" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:shadow transition-all">دانلود</a>
+          <a href="#contact" class="px-4 py-2 rounded-lg bg-brand-600 text-white hover:bg-brand-700 shadow-glow transition-all">مشاوره رایگان</a>
+          <button @click="toggle()" class="w-10 h-10 grid place-items-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="تغییر تم">
+            <i class="fas fa-sun" x-show="!isDarkMode"></i>
+            <i class="fas fa-moon" x-show="isDarkMode" x-cloak></i>
+          </button>
+        </div>
+        <div class="md:hidden flex items-center gap-2">
+          <button @click="toggle()" class="w-10 h-10 grid place-items-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="تغییر تم">
+            <i class="fas fa-sun" x-show="!isDarkMode"></i>
+            <i class="fas fa-moon" x-show="isDarkMode" x-cloak></i>
+          </button>
+          <button @click="open=!open" class="w-10 h-10 grid place-items-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="menu">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+      </div>
+      <div x-show="open" x-collapse x-cloak class="md:hidden mt-3 rounded-xl p-3 glass dark:glass-dark shadow-glow dark:shadow-glow-dark">
+        <div class="grid gap-2 text-sm">
+          <a @click="open=false" href="#features" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">ویژگی‌ها</a>
+          <a @click="open=false" href="#how" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">چطور کار می‌کند؟</a>
+          <a @click="open=false" href="#demo" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">دمو</a>
+          <a @click="open=false" href="#audience" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">مخاطبان</a>
+          <a @click="open=false" href="#faq" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">سوالات</a>
+          <a @click="open=false" href="#download" class="rounded-lg px-3 py-2 border border-gray-300 dark:border-gray-700 transition-all">دانلود</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section id="hero" class="relative overflow-hidden">
+    <div class="container mx-auto px-5 sm:px-8 pt-16 md:pt-24 pb-14 md:pb-20 grid lg:grid-cols-2 gap-10 items-center">
+      <div class="fade-up" data-io>
+        <h1 class="text-3xl sm:text-5xl font-extrabold leading-[1.2] text-gray-900 dark:text-white">
+          محتوای محصولاتتان را به <span class="text-brand-600">هوش مصنوعی</span> بسپارید
+        </h1>
+        <p class="mt-5 text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+          Pushly فرآیند زمان‌بر تولید محتوای محصولات ووکامرس و وردپرس را به کاری سریع، خودکار و خلاقانه تبدیل می‌کند. کیفیت بالاتر؛ تمرکز شما روی فروش.
+        </p>
+        <div class="mt-7 flex flex-col sm:flex-row gap-3">
+          <a href="#contact" class="px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-700 shadow-glow text-center transition-all">درخواست مشاوره رایگان</a>
+          <a href="#demo" class="px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:shadow text-center transition-all"><i class="fas fa-play ml-2"></i> مشاهده دمو</a>
+        </div>
+        <div class="mt-8 flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div class="inline-flex items-center gap-2"><i class="fa fa-shield text-brand-600"></i> اتصال امن API</div>
+          <div class="inline-flex items-center gap-2"><i class="fa fa-robot text-brand-600"></i> مدل‌های GPT و Gemini</div>
+          <div class="inline-flex items-center gap-2"><i class="fa fa-language text-brand-600"></i> پشتیبانی کامل فارسی</div>
+        </div>
+      </div>
+      <div class="relative fade-up" data-io>
+        <div class="relative aspect-[4/3] rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-2xl bg-gradient-to-br from-brand-600/15 via-emerald-500/10 to-indigo-500/10">
+          <div class="absolute inset-0 grid place-items-center">
+            <div class="text-center">
+              <div class="w-24 h-24 bg-brand-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <i class="fas fa-rocket text-white text-3xl"></i>
+              </div>
+              <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-2">Pushly Dashboard</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">رابط کاربری ساده و قدرتمند</p>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -bottom-6 -left-3 rotate-6 hidden md:block">
+          <div class="px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-glow dark:shadow-glow-dark text-sm">
+            <i class="fa fa-bolt ml-2 text-brand-600"></i> صرفه‌جویی میانگین ۷۰٪ در زمان تولید محتوا
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20">
+    <div class="container mx-auto px-5 sm:px-8">
+      <h2 class="text-2xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white">یک پلتفرم هوشمند برای مدیریت کامل محتوا</h2>
+      <p class="mt-3 text-center text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Pushly تمام ابزارهای لازم برای تولید، بهینه‌سازی و انتشار خودکار محتوا در ووکامرس و وردپرس را فراهم می‌کند.</p>
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <article class="fade-up" data-io>
+          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
+            <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-robot"></i></div>
+            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">تولید محتوای هوشمند</h3>
+            <p class="text-gray-600 dark:text-gray-400">توضیحات جذاب و SEO‑محور با قدرت مدل‌های GPT و Gemini در چند ثانیه.</p>
+          </div>
+        </article>
+
+        <article class="fade-up" data-io>
+          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
+            <div class="text-brand-600 text-3xl mb-3"><i class="fab fa-wordpress"></i></div>
+            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">انتشار در ووکامرس و وردپرس</h3>
+            <p class="text-gray-600 dark:text-gray-400">ارسال محصول و مطالب به همراه تصاویر، ویژگی‌ها و دسته‌بندی‌ها بدون خطا.</p>
+          </div>
+        </article>
+
+        <article class="fade-up" data-io>
+          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
+            <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-file-lines"></i></div>
+            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">قالب‌های پرامپت سفارشی</h3>
+            <p class="text-gray-600 dark:text-gray-400">ساخت الگوهای اختصاصی متناسب با لحن و هویت برند شما.</p>
+          </div>
+        </article>
+
+        <article class="fade-up" data-io>
+          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
+            <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-images"></i></div>
+            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">مدیریت هوشمند تصاویر</h3>
+            <p class="text-gray-600 dark:text-gray-400">آپلود آسان و جایگذاری خودکار تصاویر در متن تولیدی.</p>
+          </div>
+        </article>
+
+        <article class="fade-up" data-io>
+          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
+            <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-chart-line"></i></div>
+            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">گزارش‌گیری و ردیابی</h3>
+            <p class="text-gray-600 dark:text-gray-400">مشاهده وضعیت انتشار و لاگ‌های هر عملیات برای اطمینان کامل.</p>
+          </div>
+        </article>
+
+        <article class="fade-up" data-io>
+          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
+            <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-language"></i></div>
+            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">پشتیبانی کامل فارسی</h3>
+            <p class="text-gray-600 dark:text-gray-400">چیدمان RTL و تجربه کاربری سریع، روان و بومی.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how" class="py-20 bg-gray-50 dark:bg-gray-900/50">
+    <div class="container mx-auto px-5 sm:px-8">
+      <h2 class="text-2xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white">فقط در ۳ گام ساده، منتشر کنید</h2>
+      <p class="mt-3 text-center text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">گردش‌کار ساده، خروجی حرفه‌ای.</p>
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 fade-up bg-white dark:bg-gray-900" data-io>
+          <div class="w-14 h-14 grid place-items-center rounded-full border-2 border-brand-600 text-brand-600 text-2xl font-bold mb-3">۱</div>
+          <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">تعریف محصول</h3>
+          <p class="text-gray-600 dark:text-gray-400">نام، تصاویر، دسته‌بندی و الگوی هوش مصنوعی را مشخص کنید.</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 fade-up bg-white dark:bg-gray-900" data-io>
+          <div class="w-14 h-14 grid place-items-center rounded-full border-2 border-brand-600 text-brand-600 text-2xl font-bold mb-3">۲</div>
+          <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">تولید محتوا</h3>
+          <p class="text-gray-600 dark:text-gray-400">با یک کلیک، AI متن کامل و بهینه را آماده می‌کند.</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 fade-up bg-white dark:bg-gray-900" data-io>
+          <div class="w-14 h-14 grid place-items-center rounded-full border-2 border-brand-600 text-brand-600 text-2xl font-bold mb-3">۳</div>
+          <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">انتشار نهایی</h3>
+          <p class="text-gray-600 dark:text-gray-400">بازبینی کرده و مستقیم در ووکامرس یا وردپرس منتشر کنید.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Advanced Features Section -->
+  <section id="demo" class="py-20">
+    <div class="container mx-auto px-5 sm:px-8">
+      <div class="text-center mb-16 fade-up" data-io>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-gray-900 dark:text-white">ویژگی‌های پیشرفته Pushly</h2>
+        <p class="mt-3 text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          ابزارهای حرفه‌ای برای بهبود فرآیند کار و افزایش فروش شما
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Feature 1: Multi-platform Publishing -->
+        <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
+          <div class="flex items-start gap-6">
+            <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="fab fa-telegram text-2xl text-brand-600"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">ارسال همزمان به شبکه‌های اجتماعی</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                محصولات تولید شده را به صورت خودکار و همزمان در تلگرام، دیسکورد و دیگر کانال‌های بازاریابی خود منتشر کنید.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  انتشار خودکار در کانال‌های تلگرام
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  اتصال به سرورهای دیسکورد
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  تنظیم زمان‌بندی انتشار
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 2: Price Comparison -->
+        <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
+          <div class="flex items-start gap-6">
+            <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-chart-bar text-2xl text-brand-600"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">تحلیل قیمت رقبا</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                به صورت هوشمند قیمت محصولات مشابه را در سایت‌های رقیب بررسی کرده و بهترین قیمت را پیشنهاد دهید.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  مقایسه خودکار قیمت‌ها
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  پیشنهاد قیمت بهینه
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  گزارش تحلیل بازار
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 3: SEO Optimization -->
+        <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
+          <div class="flex items-start gap-6">
+            <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-search text-2xl text-brand-600"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">بهینه‌سازی پیشرفته SEO</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                تولید کلمات کلیدی، متاتگ‌ها و توضیحات بهینه شده برای رتبه‌بندی بالاتر در موتورهای جستجو.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  تحلیل کلمات کلیدی
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  تولید meta description
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  بهینه‌سازی عناوین H1, H2
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 4: Inventory Management -->
+        <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
+          <div class="flex items-start gap-6">
+            <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-boxes text-2xl text-brand-600"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">مدیریت موجودی هوشمند</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                ردیابی موجودی، هشدار کمبود کالا و به‌روزرسانی خودکار وضعیت محصولات در تمام پلتفرم‌ها.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  ردیابی موجودی در real-time
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  هشدارهای خودکار
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  همگام‌سازی چند پلتفرمه
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Audience -->
+  <section id="audience" class="py-20 bg-gray-50 dark:bg-gray-900/50">
+    <div class="container mx-auto px-5 sm:px-8">
+      <h2 class="text-2xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white">Pushly، شتاب‌دهنده رشد شما</h2>
+      <p class="mt-3 text-center text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">مناسب برای تیم‌های کوچک تا سازمان‌های بزرگ.</p>
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-8 text-center bg-white dark:bg-gray-900 fade-up" data-io>
+          <i class="fas fa-store text-4xl text-brand-600 mb-4"></i>
+          <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">مدیران فروشگاه‌ها</h3>
+          <p class="text-gray-600 dark:text-gray-400">تمرکز روی فروش، نه تولید محتوا.</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-8 text-center bg-white dark:bg-gray-900 fade-up" data-io>
+          <i class="fas fa-pen-nib text-4xl text-brand-600 mb-4"></i>
+          <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">تولیدکنندگان محتوا</h3>
+          <p class="text-gray-600 dark:text-gray-400">بهره‌وری چندبرابر و خروجی یکنواخت.</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 p-8 text-center bg-white dark:bg-gray-900 fade-up" data-io>
+          <i class="fas fa-building text-4xl text-brand-600 mb-4"></i>
+          <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">کسب‌وکارهای بزرگ</h3>
+          <p class="text-gray-600 dark:text-gray-400">خودکارسازی فرآیندها و مقیاس‌پذیری.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-16">
+    <div class="container mx-auto px-5 sm:px-8">
+      <div class="rounded-3xl border border-gray-200 dark:border-gray-700 p-8 md:p-12 bg-white dark:bg-gray-900 grid md:grid-cols-4 gap-8 items-center fade-up shadow-xl" data-io>
+        <div class="md:col-span-3">
+          <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white">آماده‌اید سرعت تولید محتوا را ۳ برابر کنید؟</h3>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">میانگین صرفه‌جویی ۷۰٪ زمان و افزایش چشمگیر کیفیت محتوای محصولات.</p>
+          <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+            <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800">
+              <div class="text-2xl font-extrabold text-brand-600">۷۰٪</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">صرفه‌جویی زمان</div>
+            </div>
+            <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800">
+              <div class="text-2xl font-extrabold text-brand-600">+۲٫۵x</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">سرعت تولید</div>
+            </div>
+            <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800">
+              <div class="text-2xl font-extrabold text-brand-600">۹۸٪</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">رضایت کاربران</div>
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-1 flex md:block">
+          <a href="#contact" class="w-full md:w-auto text-center px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-700 shadow-glow transition-all">درخواست مشاوره</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20">
+    <div class="container mx-auto px-5 sm:px-8 max-w-4xl">
+      <h2 class="text-2xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white">سوالات متداول</h2>
+      <p class="mt-3 text-center text-gray-600 dark:text-gray-400">پاسخ به پرسش‌های پرتکرار شما.</p>
+      <div x-data="{open:1}" class="mt-10 space-y-4">
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <button @click="open = open===1?0:1" class="w-full flex items-center justify-between px-6 py-5 text-right">
+            <span class="font-semibold text-gray-900 dark:text-white">هزینه اشتراک Pushly چقدر است؟</span>
+            <i class="fas text-gray-500 dark:text-gray-400" :class="{'fa-chevron-down': open!==1, 'fa-chevron-up': open===1}"></i>
+          </button>
+          <div x-show="open===1" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
+            پلن‌ها متناسب با نیاز شما طراحی می‌شوند. برای قیمت دقیق، با ما تماس بگیرید تا بهترین پیشنهاد ارائه شود.
+          </div>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <button @click="open = open===2?0:2" class="w-full flex items-center justify-between px-6 py-5 text-right">
+            <span class="font-semibold text-gray-900 dark:text-white">آیا برای استفاده نیاز به دانش فنی دارم؟</span>
+            <i class="fas text-gray-500 dark:text-gray-400" :class="{'fa-chevron-down': open!==2, 'fa-chevron-up': open===2}"></i>
+          </button>
+          <div x-show="open===2" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
+            خیر. رابط کاربری ساده است و تیم پشتیبانی همراه شما خواهد بود.
+          </div>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <button @click="open = open===3?0:3" class="w-full flex items-center justify-between px-6 py-5 text-right">
+            <span class="font-semibold text-gray-900 dark:text-white">فرآیند دریافت دمو چگونه است؟</span>
+            <i class="fas text-gray-500 dark:text-gray-400" :class="{'fa-chevron-down': open!==3, 'fa-chevron-up': open===3}"></i>
+          </button>
+          <div x-show="open===3" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
+            پس از ثبت درخواست، جلسه آنلاین رایگان برای نمایش زنده و پاسخ به سوالات هماهنگ می‌شود.
+          </div>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <button @click="open = open===4?0:4" class="w-full flex items-center justify-between px-6 py-5 text-right">
+            <span class="font-semibold text-gray-900 dark:text-white">از کدام مدل‌های هوش مصنوعی پشتیبانی می‌شود؟</span>
+            <i class="fas text-gray-500 dark:text-gray-400" :class="{'fa-chevron-down': open!==4, 'fa-chevron-up': open===4}"></i>
+          </button>
+          <div x-show="open===4" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
+            مدل‌های GPT (از طریق OpenAI و OpenRouter) و Gemini گوگل برای کیفیت حداکثری پشتیبانی می‌شوند.
+          </div>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <button @click="open = open===5?0:5" class="w-full flex items-center justify-between px-6 py-5 text-right">
+            <span class="font-semibold text-gray-900 dark:text-white">آیا Pushly فقط با ووکامرس کار می‌کند؟</span>
+            <i class="fas text-gray-500 dark:text-gray-400" :class="{'fa-chevron-down': open!==5, 'fa-chevron-up': open===5}"></i>
+          </button>
+          <div x-show="open===5" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
+            خیر. Pushly با هر دو پلتفرم ووکامرس و وردپرس کار می‌کند و می‌تواند محتوا را در هر دو سیستم منتشر کند.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-20 bg-gray-50 dark:bg-gray-900/50">
+    <div class="container mx-auto px-5 sm:px-8">
+      <div class="max-w-2xl mx-auto rounded-3xl border border-gray-200 dark:border-gray-700 p-8 md:p-10 bg-white dark:bg-gray-900 shadow-xl">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-900 dark:text-white">برای قیمت و مشاوره رایگان اقدام کنید</h2>
+        <p class="mt-2 text-center text-gray-600 dark:text-gray-400">فرم را تکمیل کنید تا با شما تماس بگیریم.</p>
+        <div x-data="contactForm()" class="mt-8">
+          <div x-show="state==='success'" x-cloak class="rounded-xl p-4 bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200 mb-6 border border-green-200 dark:border-green-700">
+            <div class="flex items-center">
+              <i class="fas fa-check-circle ml-2"></i>
+              <span>پیام شما با موفقیت ارسال شد. به زودی با شما تماس می‌گیریم.</span>
+            </div>
+          </div>
+          <form @submit.prevent="submit" x-show="state==='idle' || state==='submitting'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">نام و نام خانوادگی</label>
+              <input x-model="formData.name" type="text" required class="w-full rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4 py-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-colors text-gray-900 dark:text-white" />
+            </div>
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">شماره تماس</label>
+              <input x-model="formData.phone" type="tel" required class="w-full rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4 py-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-colors text-gray-900 dark:text-white" />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">آدرس وب‌سایت (اختیاری)</label>
+              <input x-model="formData.website" type="url" class="w-full rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4 py-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-colors text-gray-900 dark:text-white" />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">پیام شما</label>
+              <textarea x-model="formData.message" rows="4" class="w-full rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4 py-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-colors text-gray-900 dark:text-white" placeholder="توضیح کوتاهی از نیازهای شما..."></textarea>
+            </div>
+            <div class="md:col-span-2">
+              <button type="submit" :disabled="state==='submitting'" class="w-full px-6 py-3 rounded-xl bg-brand-600 text-white hover:bg-brand-700 shadow-glow disabled:opacity-60 disabled:cursor-not-allowed transition-all font-medium">
+                <span x-show="state==='idle'">ارسال درخواست مشاوره</span>
+                <span x-show="state==='submitting'" x-cloak class="flex items-center justify-center">
+                  <i class="fas fa-spinner fa-spin ml-2"></i> در حال ارسال...
+                </span>
+              </button>
+            </div>
+            <div x-show="message" x-cloak class="md:col-span-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-700" x-text="message"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+    <div class="container mx-auto px-5 sm:px-8 py-10">
+      <div class="grid md:grid-cols-3 gap-6 items-center text-center md:text-right">
+        <div>
+          <a href="#" class="text-2xl font-extrabold text-gray-900 dark:text-white inline-flex items-center gap-2">
+            <span class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-brand-600 text-white text-lg">🚀</span>
+            Pushly
+          </a>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">پلتفرم هوشمند تولید محتوای ووکامرس و وردپرس</p>
+        </div>
+        <div class="text-gray-500 dark:text-gray-400 space-y-1">
+          <p>ایمیل: <a class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="mailto:hello@pushly.app">hello@pushly.app</a></p>
+          <p>تلفن: <a class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="tel:09123456789">09123456789</a></p>
+        </div>
+        <div class="flex justify-center md:justify-start gap-4">
+          <a href="#" class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="#" class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all">
+            <i class="fab fa-telegram"></i>
+          </a>
+        </div>
+      </div>
+      <div class="mt-8 pt-6 text-center text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800">
+        <div class="flex flex-col md:flex-row justify-center md:justify-between items-center gap-2">
+          <p>© 2025 Pushly. تمام حقوق محفوظ است.</p>
+          <p>ساخته شده با ❤️ برای موفقیت شما</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    function themeSwitcher(){
+      return {
+        isDarkMode:false,
+        init(){
+          const saved = localStorage.getItem('theme');
+          this.isDarkMode = saved ? saved==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        },
+        toggle(){
+          this.isDarkMode = !this.isDarkMode;
+          localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+        }
+      }
+    }
+
+    function contactForm(){
+      return {
+        state:'idle',
+        message:'',
+        formData:{ name:'', phone:'', website:'', message:'' },
+        accessKey:'YOUR_ACCESS_KEY_HERE', // Replace with your real key
+        submit(){
+          if(!this.formData.name || !this.formData.phone){
+            this.message='لطفاً نام و شماره تماس را وارد کنید.';
+            return;
+          }
+          this.state='submitting';
+          this.message='';
+
+          const payload = {
+            ...this.formData,
+            access_key: this.accessKey,
+            subject: `درخواست مشاوره جدید از ${this.formData.name}`,
+            from_name: 'Pushly Website'
+          };
+
+          fetch('https://api.web3forms.com/submit',{
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json',
+              'Accept':'application/json'
+            },
+            body:JSON.stringify(payload)
+          })
+          .then(r=>r.json())
+          .then(res=>{
+            if(res.success){
+              this.state='success';
+              this.formData={name:'',phone:'',website:'',message:''};
+            }
+            else {
+              this.message=res.message||'ارسال فرم ناموفق بود.';
+              this.state='idle';
+            }
+          })
+          .catch(()=>{
+            this.message='خطای غیرمنتظره. اتصال اینترنت خود را بررسی کنید.';
+            this.state='idle';
+          });
+        }
+      }
+    }
+
+    // Intersection Observer for fade-up animations
+    (function(){
+      const els = document.querySelectorAll('[data-io]');
+      if(!('IntersectionObserver' in window)) {
+        els.forEach(el=>el.classList.add('show'));
+        return;
+      }
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('show');
+            io.unobserve(e.target);
+          }
+        });
+      },{ threshold:.15 });
+      els.forEach(el=>io.observe(el));
+    })();
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
