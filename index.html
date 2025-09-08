@@ -43,14 +43,16 @@
     body { font-family: 'Vazirmatn', system-ui, sans-serif; }
     [x-cloak] { display: none !important; }
     .glass {
-      backdrop-filter: saturate(160%) blur(10px);
-      background: rgba(255,255,255,.8);
+      backdrop-filter: saturate(160%) blur(20px);
+      background: rgba(255,255,255,.85);
       border: 1px solid rgba(255,255,255,.2);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
     }
     .glass-dark {
-      backdrop-filter: saturate(160%) blur(10px);
-      background: rgba(31,41,55,.7);
+      backdrop-filter: saturate(160%) blur(20px);
+      background: rgba(17,24,39,.85);
       border: 1px solid rgba(75,85,99,.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
     .fade-up {
       opacity: 0;
@@ -72,7 +74,7 @@
   <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 bg-mesh-light dark:bg-mesh-dark"></div>
 
   <!-- Header / Navbar -->
-  <header x-data="{ open:false }" class="sticky top-0 z-50 border-b border-gray-200/60 dark:border-gray-800/60">
+  <header x-data="{ open:false }" class="sticky top-0 z-50 border-b border-gray-200/60 dark:border-gray-800/60 backdrop-blur-md bg-white/80 dark:bg-gray-950/80">
     <nav class="container mx-auto px-5 sm:px-8 py-4">
       <div class="flex items-center justify-between">
         <a href="#" class="flex items-center gap-2 text-2xl font-extrabold text-gray-900 dark:text-white">
@@ -106,14 +108,18 @@
           </button>
         </div>
       </div>
-      <div x-show="open" x-collapse x-cloak class="md:hidden mt-3 rounded-xl p-3 glass dark:glass-dark shadow-glow dark:shadow-glow-dark">
-        <div class="grid gap-2 text-sm">
-          <a @click="open=false" href="#features" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">ویژگی‌ها</a>
-          <a @click="open=false" href="#how" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">چطور کار می‌کند؟</a>
-          <a @click="open=false" href="#demo" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">دمو</a>
-          <a @click="open=false" href="#audience" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">مخاطبان</a>
-          <a @click="open=false" href="#faq" class="rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">سوالات</a>
-          <a @click="open=false" href="#download" class="rounded-lg px-3 py-2 border border-gray-300 dark:border-gray-700 transition-all">دانلود</a>
+      <!-- Mobile Menu - Fixed Dark Mode -->
+      <div x-show="open" x-collapse x-cloak class="md:hidden mt-4 rounded-xl overflow-hidden" :class="isDarkMode ? 'glass-dark' : 'glass'">
+        <div class="p-4 space-y-2">
+          <a @click="open=false" href="#features" class="block rounded-lg px-3 py-3 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">ویژگی‌ها</a>
+          <a @click="open=false" href="#how" class="block rounded-lg px-3 py-3 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">چطور کار می‌کند؟</a>
+          <a @click="open=false" href="#demo" class="block rounded-lg px-3 py-3 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">دمو</a>
+          <a @click="open=false" href="#audience" class="block rounded-lg px-3 py-3 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">مخاطبان</a>
+          <a @click="open=false" href="#faq" class="block rounded-lg px-3 py-3 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">سوالات</a>
+          <div class="pt-2 border-t border-gray-200 dark:border-gray-600">
+            <a @click="open=false" href="https://miladsoltani.me/media/pushly/pushly.zip" class="block rounded-lg px-3 py-3 border border-gray-300 dark:border-gray-600 text-center text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">دانلود</a>
+            <a @click="open=false" href="#contact" class="block rounded-lg px-3 py-3 mt-2 bg-brand-600 text-white text-center hover:bg-brand-700 transition-all">مشاوره رایگان</a>
+          </div>
         </div>
       </div>
     </nav>
@@ -135,7 +141,7 @@
         </div>
         <div class="mt-8 flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
           <div class="inline-flex items-center gap-2"><i class="fa fa-shield text-brand-600"></i> اتصال امن API</div>
-          <div class="inline-flex items-center gap-2"><i class="fa fa-robot text-brand-600"></i> مدل‌های GPT و Gemini</div>
+          <div class="inline-flex items-center gap-2"><i class="fa fa-robot text-brand-600"></i> GPT، Gemini و Ollama</div>
           <div class="inline-flex items-center gap-2"><i class="fa fa-language text-brand-600"></i> پشتیبانی کامل فارسی</div>
         </div>
       </div>
@@ -171,7 +177,7 @@
           <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
             <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-robot"></i></div>
             <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">تولید محتوای هوشمند</h3>
-            <p class="text-gray-600 dark:text-gray-400">توضیحات جذاب و SEO‑محور با قدرت مدل‌های GPT و Gemini در چند ثانیه.</p>
+            <p class="text-gray-600 dark:text-gray-400">توضیحات جذاب و SEO‑محور با قدرت مدل‌های GPT، Gemini و Ollama در چند ثانیه.</p>
           </div>
         </article>
 
@@ -193,6 +199,14 @@
 
         <article class="fade-up" data-io>
           <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
+            <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-server"></i></div>
+            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">پشتیبانی Ollama محلی</h3>
+            <p class="text-gray-600 dark:text-gray-400">اجرای مدل‌های هوش مصنوعی به صورت محلی و آفلاین با Ollama برای حریم خصوصی کامل.</p>
+          </div>
+        </article>
+
+        <article class="fade-up" data-io>
+          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
             <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-images"></i></div>
             <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">مدیریت هوشمند تصاویر</h3>
             <p class="text-gray-600 dark:text-gray-400">آپلود آسان و جایگذاری خودکار تصاویر در متن تولیدی.</p>
@@ -204,14 +218,6 @@
             <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-chart-line"></i></div>
             <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">گزارش‌گیری و ردیابی</h3>
             <p class="text-gray-600 dark:text-gray-400">مشاهده وضعیت انتشار و لاگ‌های هر عملیات برای اطمینان کامل.</p>
-          </div>
-        </article>
-
-        <article class="fade-up" data-io>
-          <div class="h-full rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all bg-white dark:bg-gray-900">
-            <div class="text-brand-600 text-3xl mb-3"><i class="fas fa-language"></i></div>
-            <h3 class="font-bold text-xl mb-2 text-gray-900 dark:text-white">پشتیبانی کامل فارسی</h3>
-            <p class="text-gray-600 dark:text-gray-400">چیدمان RTL و تجربه کاربری سریع، روان و بومی.</p>
           </div>
         </article>
 
@@ -244,7 +250,7 @@
     </div>
   </section>
 
-  <!-- Advanced Features Section -->
+  <!-- Advanced Features Section with Ollama -->
   <section id="demo" class="py-20">
     <div class="container mx-auto px-5 sm:px-8">
       <div class="text-center mb-16 fade-up" data-io>
@@ -255,7 +261,40 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Feature 1: Multi-platform Publishing -->
+        <!-- Feature 1: Ollama Support -->
+        <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
+          <div class="flex items-start gap-6">
+            <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-server text-2xl text-brand-600"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">پشتیبانی کامل از Ollama</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                اجرای مدل‌های هوش مصنوعی به صورت محلی و آفلاین برای حفظ حریم خصوصی و کاهش هزینه‌ها.
+              </p>
+              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  اجرای آفلاین بدون نیاز به اینترنت
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  حفظ کامل حریم خصوصی داده‌ها
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  پشتیبانی از مدل‌های Llama، CodeLlama و غیره
+                </li>
+                <li class="flex items-center gap-2">
+                  <i class="fas fa-check text-green-500"></i>
+                  کاهش هزینه‌های API
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 2: Multi-platform Publishing -->
         <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
           <div class="flex items-start gap-6">
             <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -275,35 +314,9 @@
                   <i class="fas fa-check text-green-500"></i>
                   اتصال به سرورهای دیسکورد
                 </li>
-                
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feature 2: Price Comparison -->
-        <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
-          <div class="flex items-start gap-6">
-            <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
-              <i class="fas fa-chart-bar text-2xl text-brand-600"></i>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">تحلیل قیمت رقبا</h3>
-              <p class="text-gray-600 dark:text-gray-400 mb-4">
-                به صورت هوشمند قیمت محصولات مشابه را در سایت‌های رقیب بررسی کرده و بهترین قیمت را پیشنهاد دهید.
-              </p>
-              <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li class="flex items-center gap-2">
                   <i class="fas fa-check text-green-500"></i>
-                  مقایسه خودکار قیمت‌ها
-                </li>
-                <li class="flex items-center gap-2">
-                  <i class="fas fa-check text-green-500"></i>
-                  پیشنهاد قیمت بهینه
-                </li>
-                <li class="flex items-center gap-2">
-                  <i class="fas fa-check text-green-500"></i>
-                  گزارش تحلیل بازار
+                  برنامه‌ریزی انتشار محتوا
                 </li>
               </ul>
             </div>
@@ -339,31 +352,77 @@
           </div>
         </div>
 
-        <!-- Feature 4: Inventory Management -->
+        <!-- Feature 4: Price Comparison -->
         <div class="fade-up bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:shadow-xl transition-all" data-io>
           <div class="flex items-start gap-6">
             <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
-              <i class="fas fa-boxes text-2xl text-brand-600"></i>
+              <i class="fas fa-chart-bar text-2xl text-brand-600"></i>
             </div>
             <div class="flex-1">
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">مدیریت موجودی هوشمند</h3>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">تحلیل قیمت رقبا</h3>
               <p class="text-gray-600 dark:text-gray-400 mb-4">
-                ردیابی موجودی، هشدار کمبود کالا و به‌روزرسانی خودکار وضعیت محصولات در تمام پلتفرم‌ها.
+                به صورت هوشمند قیمت محصولات مشابه را در سایت‌های رقیب بررسی کرده و بهترین قیمت را پیشنهاد دهید.
               </p>
               <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li class="flex items-center gap-2">
                   <i class="fas fa-check text-green-500"></i>
-                  ردیابی موجودی در real-time
+                  مقایسه خودکار قیمت‌ها
                 </li>
                 <li class="flex items-center gap-2">
                   <i class="fas fa-check text-green-500"></i>
-                  هشدارهای خودکار
+                  پیشنهاد قیمت بهینه
                 </li>
                 <li class="flex items-center gap-2">
                   <i class="fas fa-check text-green-500"></i>
-                  همگام‌سازی چند پلتفرمه
+                  گزارش تحلیل بازار
                 </li>
               </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Models Comparison Section -->
+      <div class="mt-16 fade-up" data-io>
+        <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">مقایسه مدل‌های هوش مصنوعی</h3>
+        <div class="overflow-x-auto">
+          <div class="min-w-full">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <!-- Headers -->
+              <div class="hidden md:block"></div>
+              <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center">
+                <h4 class="font-bold text-blue-600 dark:text-blue-400">GPT (OpenAI)</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">ابری، پرقدرت</p>
+              </div>
+              <div class="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 text-center">
+                <h4 class="font-bold text-green-600 dark:text-green-400">Gemini (Google)</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">ابری، چندوسیله‌ای</p>
+              </div>
+              <div class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
+                <h4 class="font-bold text-purple-600 dark:text-purple-400">Ollama (محلی)</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">آفلاین، خصوصی</p>
+              </div>
+
+              <!-- Rows -->
+              <div class="font-medium text-gray-700 dark:text-gray-300 py-3">کیفیت محتوا</div>
+              <div class="text-center py-3"><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i></div>
+              <div class="text-center py-3"><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-gray-300"></i></div>
+              <div class="text-center py-3"><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-gray-300"></i><i class="fas fa-star text-gray-300"></i></div>
+
+              <div class="font-medium text-gray-700 dark:text-gray-300 py-3">سرعت پاسخ</div>
+              <div class="text-center py-3 text-orange-600">متوسط</div>
+              <div class="text-center py-3 text-green-600">سریع</div>
+              <div class="text-center py-3 text-green-600">خیلی سریع</div>
+
+              <div class="font-medium text-gray-700 dark:text-gray-300 py-3">هزینه</div>
+              <div class="text-center py-3 text-red-600">بالا</div>
+              <div class="text-center py-3 text-orange-600">متوسط</div>
+              <div class="text-center py-3 text-green-600">رایگان</div>
+
+              <div class="font-medium text-gray-700 dark:text-gray-300 py-3">حریم خصوصی</div>
+              <div class="text-center py-3 text-orange-600">متوسط</div>
+              <div class="text-center py-3 text-orange-600">متوسط</div>
+              <div class="text-center py-3 text-green-600">عالی</div>
             </div>
           </div>
         </div>
@@ -464,7 +523,7 @@
             <i class="fas text-gray-500 dark:text-gray-400" :class="{'fa-chevron-down': open!==4, 'fa-chevron-up': open===4}"></i>
           </button>
           <div x-show="open===4" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
-            مدل‌های GPT (از طریق OpenAI و OpenRouter) و Gemini گوگل برای کیفیت حداکثری پشتیبانی می‌شوند.
+            مدل‌های GPT (از طریق OpenAI و OpenRouter)، Gemini گوگل و Ollama برای اجرای محلی پشتیبانی می‌شوند.
           </div>
         </div>
         <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
@@ -474,6 +533,15 @@
           </button>
           <div x-show="open===5" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
             خیر. Pushly با هر دو پلتفرم ووکامرس و وردپرس کار می‌کند و می‌تواند محتوا را در هر دو سیستم منتشر کند.
+          </div>
+        </div>
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <button @click="open = open===6?0:6" class="w-full flex items-center justify-between px-6 py-5 text-right">
+            <span class="font-semibold text-gray-900 dark:text-white">مزایای استفاده از Ollama چیست؟</span>
+            <i class="fas text-gray-500 dark:text-gray-400" :class="{'fa-chevron-down': open!==6, 'fa-chevron-up': open===6}"></i>
+          </button>
+          <div x-show="open===6" x-collapse x-cloak class="px-6 pb-6 text-gray-600 dark:text-gray-400">
+            Ollama امکان اجرای مدل‌های هوش مصنوعی به صورت محلی را فراهم می‌کند که باعث حفظ کامل حریم خصوصی، کاهش هزینه‌های API و عدم وابستگی به اینترنت می‌شود.
           </div>
         </div>
       </div>
